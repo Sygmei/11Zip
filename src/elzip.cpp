@@ -25,7 +25,7 @@ namespace elz
                     create_directory(fillPath);
                 }
             }
-            std::cout << "Opening file : " << filename << std::endl;
+            // std::cout << "Opening file : " << filename << std::endl;
             zipFile.openEntry(filename.c_str());
             std::ofstream wFile;
             wFile.open(cFile.string(), std::ios_base::binary | std::ios_base::out);
