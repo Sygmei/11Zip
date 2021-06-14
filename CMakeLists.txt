@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.12)
+
 project(elzip)
 
 add_subdirectory(extlibs/minizip)

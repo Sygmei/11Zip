@@ -4,6 +4,7 @@
 #include <elzip.hpp>
 #include <fswrapper.hpp>
 #include <unzipper.hpp>
+#include <zipper.hpp>
 
 namespace elz
 {
@@ -44,5 +45,39 @@ namespace elz
         std::string dumped = zipFile.dump();
         wFile.write(dumped.c_str(), dumped.size());
         wFile.close();
+    }
+
+    void zipFolder(std::string folderName, std::string zipTarget)
+    {
+        if (!std::filesystem::is_directory(std::filesystem::path(folderName)))
+        {
+            throw std::runtime_error("'" + folderName + "' is not a valid directory");
+        }
+        if (folderName.back() != '/' || folderName.back() != std::filesystem::path::preferred_separator)
+        {
+            folderName += std::filesystem::path::preferred_separator;
+        }
+        if (zipTarget.empty())
+        {
+            const auto lastPathElement = std::filesystem::path(folderName).parent_path().filename();
+            zipTarget = lastPathElement.string() + ".zip";
+        }
+        ziputils::zipper zipper;
+        zipper.open(zipTarget.c_str());
+        for (const auto& path : std::filesystem::recursive_directory_iterator(folderName))
+        {
+            auto absolutePath = path.path().string();
+            auto relativePath = std::filesystem::relative(path.path(), folderName);
+            auto pathStr = relativePath.string();
+            zipper.addEntry(pathStr.c_str());
+
+            std::ifstream fileContent;
+            fileContent.open(absolutePath, std::ifstream::in | std::ifstream::binary);
+
+            zipper << fileContent;
+
+            zipper.closeEntry();
+        }
+        zipper.close();
     }
 }
