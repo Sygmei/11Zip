@@ -2,74 +2,62 @@
 #include <iostream>
 
 #include <elzip.hpp>
-#include <fswrapper.hpp>
 #include <unzipper.hpp>
 #include <zipper.hpp>
 
 namespace elz
 {
-    void extractZip(std::string zipname, std::string target)
+    void _extractFile(ziputils::unzipper& zipFile, path filename, path target)
     {
-        ziputils::unzipper zipFile;
-        zipFile.open(zipname.c_str());
-        for (std::string filename : zipFile.getFilenames())
-        {
-            std::filesystem::path cDir(target + ((std::filesystem::path(filename).parent_path().string() == "") ? "" : "/") + std::filesystem::path(filename).parent_path().string());
-            std::filesystem::path cFile(target + "/" + filename);
-            std::filesystem::path fillPath;
-            for (std::filesystem::path pathPart : cDir)
-            {
-                fillPath /= pathPart;
-                if (!exists(fillPath))
-                {
-                    create_directory(fillPath);
-                }
-            }
-            // std::cout << "Opening file : " << filename << std::endl;
-            zipFile.openEntry(filename.c_str());
-            std::ofstream wFile;
-            wFile.open(cFile.string(), std::ios_base::binary | std::ios_base::out);
-            std::string dumped = zipFile.dump();
-            wFile.write(dumped.c_str(), dumped.size());
-            wFile.close();
-        }
-    }
-
-    void extractFile(std::string zipname, std::string filename, std::string target)
-    {
-        ziputils::unzipper zipFile;
-        zipFile.open(zipname.c_str());
-        zipFile.openEntry(filename.c_str());
+        zipFile.openEntry(filename.string().c_str());
         std::ofstream wFile;
-        wFile.open(target, std::ios_base::binary | std::ios_base::out);
+        wFile.open(target.string(), std::ios_base::binary | std::ios_base::out);
         std::string dumped = zipFile.dump();
         wFile.write(dumped.c_str(), dumped.size());
         wFile.close();
     }
 
-    void zipFolder(std::string folderName, std::string zipTarget)
+    void extractZip(path archive, path target)
     {
-        if (!std::filesystem::is_directory(std::filesystem::path(folderName)))
+        ziputils::unzipper zipFile;
+        zipFile.open(archive.string().c_str());
+
+        for (std::string filename : zipFile.getFilenames())
         {
-            throw std::runtime_error("'" + folderName + "' is not a valid directory");
+            std::filesystem::path currentDir = target / std::filesystem::path(filename).parent_path();
+            std::filesystem::create_directories(currentDir);
+            std::filesystem::path currentFile = target / filename;
+
+            _extractFile(zipFile, filename, currentFile.string());
         }
-        if (folderName.back() != '/' || folderName.back() != std::filesystem::path::preferred_separator)
+    }
+
+    void extractFile(path archive, path fileInArchive, path target, std::string outFilename)
+    {
+        ziputils::unzipper zipFile;
+        zipFile.open(archive.string().c_str());
+        outFilename = (outFilename.empty() ? fileInArchive.string() : outFilename);
+        std::filesystem::create_directories(target);
+        _extractFile(zipFile, fileInArchive.string(), target / outFilename);
+    }
+
+    void zipFolder(path directory, path archivePath)
+    {
+        if (!std::filesystem::is_directory(std::filesystem::path(directory)))
         {
-            folderName += std::filesystem::path::preferred_separator;
+            throw std::runtime_error("'" + directory.string() + "' is not a valid directory");
         }
-        if (zipTarget.empty())
+        if (archivePath.empty())
         {
-            const auto lastPathElement = std::filesystem::path(folderName).parent_path().filename();
-            zipTarget = lastPathElement.string() + ".zip";
+            archivePath = std::filesystem::path(directory).filename().string() + ".zip";
         }
         ziputils::zipper zipper;
-        zipper.open(zipTarget.c_str());
-        for (const auto& path : std::filesystem::recursive_directory_iterator(folderName))
+        zipper.open(archivePath.string().c_str());
+        for (const auto& path : std::filesystem::recursive_directory_iterator(directory))
         {
-            auto absolutePath = path.path().string();
-            auto relativePath = std::filesystem::relative(path.path(), folderName);
-            auto pathStr = relativePath.string();
-            zipper.addEntry(pathStr.c_str());
+            auto absolutePath = path.path();
+            auto relativePath = std::filesystem::relative(absolutePath, directory);
+            zipper.addEntry(relativePath.string().c_str());
 
             std::ifstream fileContent;
             fileContent.open(absolutePath, std::ifstream::in | std::ifstream::binary);

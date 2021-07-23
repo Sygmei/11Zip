@@ -1,10 +1,13 @@
 #pragma once
 
+#include <fswrapper.hpp>
 #include <string>
 
 namespace elz
 {
-    void extractZip(std::string zipname, std::string target = ".");
-    void extractFile(std::string zipname, std::string filename, std::string target = ".");
-    void zipFolder(std::string folderName, std::string zipTarget = "");
+    using path = std::filesystem::path;
+
+    void extractZip(path archive, path target = ".");
+    void extractFile(path archive, path fileInArchive, path target = ".", std::string outFilename = "");
+    void zipFolder(path folder, path archivePath = "");
 }
