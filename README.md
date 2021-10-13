@@ -1,4 +1,7 @@
 # 11Zip
+
+[![build](https://github.com/Sygmei/11Zip/actions/workflows/build.yml/badge.svg)](https://github.com/Sygmei/11Zip/actions/workflows/build.yml)
+
 Dead simple zipping / unzipping C++ Lib
 
 I didn't really wanted to make my own zipping / unzipping library but as I found nothing else, I made my own.
