@@ -11,11 +11,6 @@ namespace ziputils
     {
     }
 
-    char const* dump_error::what() const
-    {
-        return runtime_error::what();
-    }
-
     // Default constructor
     unzipper::unzipper() :
         zipFile_(nullptr),

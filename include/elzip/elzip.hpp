@@ -9,17 +9,11 @@ namespace elz
     {
     public:
         zip_exception(const std::string& error);
-        char const* what() const override;
         ~zip_exception() override = default;
     };
 
     inline zip_exception::zip_exception(const std::string& error) : std::runtime_error(error)
     {
-    }
-
-    inline char const* zip_exception::what() const
-    {
-        return runtime_error::what();
     }
 
     using path = std::filesystem::path;

@@ -2,8 +2,8 @@
 #include <algorithm>
 #include <ctime>
 
-#include <minizip/mz_compat.h>
 #include <zlib/zlib.h>
+#include <minizip/mz_compat.h>
 
 #include <zipper.hpp>
 

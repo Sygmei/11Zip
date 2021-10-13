@@ -8,11 +8,10 @@
 
 namespace ziputils
 {
-    class dump_error : std::runtime_error
+    class dump_error : public std::runtime_error
     {
     public:
         dump_error();
-        char const* what() const override;
         ~dump_error() override = default;
     };
 
