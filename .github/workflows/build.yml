@@ -1,0 +1,55 @@
+name: build
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build_linux:
+    name: Build 11zip on Linux
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Create build directory
+      run: mkdir build
+    - name: Aptitude update
+      run: sudo apt-get update
+    - name: Install CMake
+      run: sudo apt-get install -y cmake
+    - name: Install G++ and build-essential
+      run: sudo apt-get install -y build-essential g++
+    - name: Compile 11zip
+      run: cd build; cmake ..; make -j8
+
+  build_windows:
+    name: Build 11zip on Windows
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Create build directory
+      run: mkdir build
+    - name: Run CMake on 11zip
+      run: cd build; cmake -G "Visual Studio 16 2019" -A x64 ..
+      shell: pwsh
+    - name: Compile 11zip
+      run: cmake --build build --config Release -- /m:8
+
+  build_macos:
+    name: Build 11zip on MacOS
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Create build directory
+      run: mkdir build
+    - name: Run CMake on 11zip
+      run: cd build && cmake ..
+    - name: Compile 11zip
+      run: cd build && make -j8
