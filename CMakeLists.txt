@@ -19,7 +19,7 @@ file(GLOB LZIP_SOURCES
     src/zipper.cpp
 )
 
-add_executable(elzip ${LZIP_HEADERS} ${LZIP_SOURCES})
+add_library(elzip ${LZIP_HEADERS} ${LZIP_SOURCES})
 target_link_libraries(elzip minizip)
 
 if (USE_FILESYSTEM_FALLBACK)

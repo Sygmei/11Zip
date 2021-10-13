@@ -16,11 +16,11 @@ namespace ziputils
 
         bool open(const char* filename, bool append = false);
         void close();
-        bool isOpen();
+        bool isOpen() const;
 
         bool addEntry(const char* filename);
         void closeEntry();
-        bool isOpenEntry();
+        bool isOpenEntry() const;
 
         zipper& operator<<(std::istream& is);
 
