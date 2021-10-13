@@ -4,11 +4,18 @@
 #include <string>
 #include <vector>
 
-#include <minizip/ioapi.h>
-#include <minizip/unzip.h>
+#include <minizip/mz_compat.h>
 
 namespace ziputils
 {
+    class dump_error : std::runtime_error
+    {
+    public:
+        dump_error();
+        char const* what() const override;
+        ~dump_error() override = default;
+    };
+
     class unzipper
     {
     public:
@@ -21,14 +28,14 @@ namespace ziputils
 
         bool openEntry( const char* filename );
         void closeEntry();
-        bool isOpenEntry();
-        unsigned int getEntrySize();
+        bool isOpenEntry() const;
+        unsigned int getEntrySize() const;
 
         const std::vector<std::string>& getFilenames();
         const std::vector<std::string>& getFolders();
 
         unzipper& operator>>( std::ostream& os );
-        std::string dump();
+        std::string dump() const;
 
     private:
         void readEntries();

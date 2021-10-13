@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(elzip)
 
+add_subdirectory(extlibs/zlib)
 add_subdirectory(extlibs/minizip)
 
 file(GLOB LZIP_HEADERS include/elzip/*.hpp)
@@ -12,13 +13,13 @@ else()
     set(ELZIP_CPP src/elzip.cpp)
 endif()
 
-file(GLOB LZIP_SOURCES 
+file(GLOB LZIP_SOURCES
     ${ELZIP_CPP}
     src/unzipper.cpp
     src/zipper.cpp
 )
 
-add_library(elzip ${LZIP_HEADERS} ${LZIP_SOURCES})
+add_executable(elzip ${LZIP_HEADERS} ${LZIP_SOURCES})
 target_link_libraries(elzip minizip)
 
 if (USE_FILESYSTEM_FALLBACK)
@@ -28,7 +29,7 @@ elseif (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 target_include_directories(elzip
-    PUBLIC 
+    PUBLIC
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/elzip>

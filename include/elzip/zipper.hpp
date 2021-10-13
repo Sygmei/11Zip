@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <minizip/ioapi.h>
-#include <minizip/zip.h>
+#include <minizip/mz_compat.h>
 
 namespace ziputils
 {

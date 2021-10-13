@@ -1,15 +1,15 @@
 
 #include <algorithm>
-#include <sstream>
 #include <ctime>
 
-#include <minizip/zlib.h>
+#include <minizip/mz_compat.h>
+#include <zlib/zlib.h>
 
 #include <zipper.hpp>
 
 namespace ziputils
 {
-    const unsigned int BUFSIZE = 2048;
+    constexpr unsigned int BUFSIZE = 2048;
 
 
     // Default constructor
@@ -53,12 +53,12 @@ namespace ziputils
     // Check if a zipfile is open.
     // return:
     //        true if open, false otherwise
-    bool zipper::isOpen()
+    bool zipper::isOpen() const
     {
         return zipFile_ != nullptr;
     }
 
-    // Create a zip entry; either file or folder. Folder has to 
+    // Create a zip entry; either file or folder. Folder has to
     // end with a slash or backslash.
     // return:
     //        true if open, false otherwise
@@ -98,27 +98,25 @@ namespace ziputils
     // Check if there is a currently open file zip entry.
     // return:
     //        true if open, false otherwise
-    bool zipper::isOpenEntry()
+    bool zipper::isOpenEntry() const
     {
         return entryOpen_;
     }
 
-    // Stream operator for dumping data from an input stream to the 
+    // Stream operator for dumping data from an input stream to the
     // currently open zip entry.
     zipper& zipper::operator<<(std::istream& is)
     {
         int err = ZIP_OK;
-        char buf[BUFSIZE];
-        unsigned long nRead = 0;
 
         if (isOpenEntry())
         {
             while (err == ZIP_OK && is.good())
             {
+                char buf[BUFSIZE];
                 is.read(buf, BUFSIZE);
-                unsigned int nRead = (unsigned int)is.gcount();
 
-                if (nRead)
+                if (const unsigned long nRead = static_cast<unsigned>(is.gcount()))
                 {
                     err = zipWriteInFileInZip(zipFile_, buf, nRead);
                 }
@@ -138,7 +136,7 @@ namespace ziputils
     {
         time_t rawtime;
         time(&rawtime);
-        auto timeinfo = localtime(&rawtime);
+        const auto timeinfo = localtime(&rawtime);
         tmZip.tm_sec = timeinfo->tm_sec;
         tmZip.tm_min = timeinfo->tm_min;
         tmZip.tm_hour = timeinfo->tm_hour;

@@ -1,13 +1,21 @@
 #include <algorithm>
 #include <exception>
-#include <sstream>
 
-#include <minizip/zlib.h>
+#include <minizip/mz_compat.h>
 
 #include <unzipper.hpp>
 
 namespace ziputils
 {
+    dump_error::dump_error() : std::runtime_error("dump error")
+    {
+    }
+
+    char const* dump_error::what() const
+    {
+        return runtime_error::what();
+    }
+
     // Default constructor
     unzipper::unzipper() :
         zipFile_(nullptr),
@@ -104,7 +112,7 @@ namespace ziputils
     // Check if there is a currently open zip entry.
     // return:
     //        true if open, false otherwise
-    bool unzipper::isOpenEntry()
+    bool unzipper::isOpenEntry() const
     {
         return entryOpen_;
     }
@@ -112,7 +120,7 @@ namespace ziputils
     // Get the zip entry uncompressed size.
     // return:
     //        zip entry uncompressed size
-    unsigned int unzipper::getEntrySize()
+    unsigned int unzipper::getEntrySize() const
     {
         if (entryOpen_)
         {
@@ -122,7 +130,7 @@ namespace ziputils
 
             if (err == UNZ_OK)
             {
-                return (unsigned int)oFileInfo.uncompressed_size;
+                return static_cast<unsigned>(oFileInfo.uncompressed_size);
             }
         }
         return 0;
@@ -151,11 +159,11 @@ namespace ziputils
                     char nLast = filename[oFileInfo.size_filename - 1];
                     if (nLast == '/' || nLast == '\\')
                     {
-                        folders_.push_back(filename);
+                        folders_.emplace_back(filename);
                     }
                     else
                     {
-                        files_.push_back(filename);
+                        files_.emplace_back(filename);
                     }
 
                     err = unzGoToNextFile(zipFile_);
@@ -164,37 +172,41 @@ namespace ziputils
         }
     }
 
-    // Dump the currently open entry to the uotput stream
+    // Dump the currently open entry to the output stream
     unzipper& unzipper::operator>>(std::ostream& os)
     {
         if (isOpenEntry())
         {
             unsigned int size = getEntrySize();
-            char* buf = new char[size];
-            size = unzReadCurrentFile(zipFile_, buf, size);
+            std::vector<char> buf;
+            buf.reserve(size);
+            size = unzReadCurrentFile(zipFile_, buf.data(), size);
             if (size > 0)
             {
-                os.write(buf, size);
+                os.write(buf.data(), size);
                 os.flush();
             }
-            delete [] buf;
+        }
+        else
+        {
+            throw dump_error();
         }
         return *this;
     }
 
-    std::string unzipper::dump()
+    std::string unzipper::dump() const
     {
         if (isOpenEntry())
         {
             unsigned int size = getEntrySize();
-            char* buf = new char[size];
-            size = unzReadCurrentFile(zipFile_, buf, size);
-            std::string ret = "";
+            std::vector<char> buf;
+            buf.reserve(size);
+            size = unzReadCurrentFile(zipFile_, buf.data(), size);
+            std::string ret;
             if (size > 0)
-                ret = std::string(buf, size);
-            delete[] buf;
+                ret = std::string(buf.data(), size);
             return ret;
         }
-        throw std::runtime_error("Entry is not opened");
+        throw dump_error();
     }
 };
