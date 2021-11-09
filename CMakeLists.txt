@@ -2,8 +2,12 @@ cmake_minimum_required(VERSION 3.12)
 
 project(elzip)
 
-add_subdirectory(extlibs/zlib)
-add_subdirectory(extlibs/minizip)
+option(ELZIP_EXCLUDE_MINIZIP "Use this to exclude internal minizip copy." OFF)
+
+#add_subdirectory(extlibs/zlib)
+if(NOT ELZIP_EXCLUDE_MINIZIP)
+    add_subdirectory(extlibs/minizip)
+endif()
 
 file(GLOB LZIP_HEADERS include/elzip/*.hpp)
 
@@ -33,6 +37,7 @@ target_include_directories(elzip
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/elzip>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
