@@ -3,3 +3,8 @@
 	url = https://github.com/zlib-ng/minizip-ng.git
 	ignore = dirty
 	shallow = true
+[submodule "extlibs/zlib"]
+	path = extlibs/zlib
+	url = https://github.com/madler/zlib.git
+	ignore = dirty
+	shallow = true
