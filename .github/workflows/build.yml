@@ -33,11 +33,13 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-
+        fetch-depth: 0
     - name: Create build directory
       run: mkdir build
     - name: Run CMake on 11zip
-      run: cd build; cmake -G "Visual Studio 16 2019" -A x64 ..
+      # NOTE(assertores>: Don't use find_package for 3rd party libraries which are installed incorrectly on GitHub CI instances
+      # https://github.com/zlib-ng/minizip-ng/blob/99d39015e29703af2612277180ea586805f655ea/.github/workflows/main.yml#L157
+      run: cd build; cmake .. -G "Visual Studio 16 2019" -A x64 -DMZ_FORCE_FETCH_LIBS=ON
       shell: pwsh
     - name: Compile 11zip
       run: cmake --build build --config Release -- /m:8
