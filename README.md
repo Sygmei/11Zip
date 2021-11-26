@@ -2,7 +2,7 @@
 
 [![build](https://github.com/Sygmei/11Zip/actions/workflows/build.yml/badge.svg)](https://github.com/Sygmei/11Zip/actions/workflows/build.yml)
 
-Dead simple zipping / unzipping C++ Lib
+11Zip (or **EL**<sub>even</sub>**Zip**) is a dead simple zipping / unzipping C++ Lib
 
 I didn't really wanted to make my own zipping / unzipping library but as I found nothing else, I made my own.
 
@@ -13,6 +13,24 @@ By the same time it's also a reference to 7zip.
 The lib is based on zlib & minizip : https://github.com/madler/zlib
 
 It does also include some wrapper code from here : www.vilipetek.com/2013/11/22/zippingunzipping-files-in-c/
+
+## Installation
+
+Clone this repository using the following command :
+
+```bash
+git clone --recurse-submodules https://github.com/Sygmei/11Zip.git
+```
+
+(don't forget about the `--recurse-submodules` part or dependencies are not going to be downloaded).
+
+Once downloaded, put the content into your `extlibs/` (or equivalent) directory and put the following lines in your `CMakeLists.txt` :
+
+```cmake
+add_subdirectory(extlibs/elzip) # Path to the 11zip
+
+target_link_libraries(YourTargetName elzip)
+```
 
 ## Reference
 
