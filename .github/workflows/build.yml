@@ -13,6 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        submodules: 'recursive'
         fetch-depth: 0
     - name: Create build directory
       run: mkdir build
@@ -31,6 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        submodules: 'recursive'
         fetch-depth: 0
     - name: Create build directory
       run: mkdir build
@@ -46,6 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        submodules: 'recursive'
         fetch-depth: 0
     - name: Create build directory
       run: mkdir build

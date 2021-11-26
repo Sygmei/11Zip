@@ -34,3 +34,4 @@
 # IDEs
 .vscode/
 .idea/
+build/
