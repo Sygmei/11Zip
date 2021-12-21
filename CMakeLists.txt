@@ -4,6 +4,7 @@ project(elzip)
 
 option(ELZIP_EXCLUDE_ZLIB "Use this to exclude internal zlib copy." OFF)
 option(ELZIP_EXCLUDE_MINIZIP "Use this to exclude internal minizip copy." OFF)
+option(ELZIP_TESTS "includes tests for 11Zip." ON)
 
 if(NOT ELZIP_EXCLUDE_ZLIB)
     add_subdirectory(extlibs/zlib EXCLUDE_FROM_ALL)
@@ -59,3 +60,7 @@ endif()
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_EXTENSIONS OFF)
+
+if(ELZIP_TESTS)
+    add_subdirectory(test)
+endif()
