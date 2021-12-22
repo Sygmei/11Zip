@@ -4,7 +4,7 @@
 
 static const std::filesystem::path locAssetDir{ASSETS_DIR "_Live"};
 
-class GithubTestFixture : public ::testing::Test {
+class UnzipFileTestFixture : public ::testing::Test {
 protected:
 	void SetUp() override {
 		std::filesystem::copy(
@@ -36,12 +36,23 @@ protected:
 	}
 };
 
-TEST(UnzipFile, can_unzip_an_archive_which_contains_binary_files) // NOLINT
+TEST_F(UnzipFileTestFixture, can_unzip_an_archive_which_contains_binary_files) // NOLINT
 {
     EXPECT_EXIT({
-        elz::extractZip(locAssetDir / "patch.zip", locAssetDir / "patch");
-        exit(0);
-        },
-        ::testing::ExitedWithCode(0),
-        "");
+        	elz::extractZip(locAssetDir / "patch.zip", locAssetDir / "patch");
+        	exit(0);
+    	},
+    	::testing::ExitedWithCode(0),
+    	""
+	);
+}
+
+TEST_F(UnzipFileTestFixture, files_are_actualy_unziped) // NOLINT
+{
+	const auto patchDir = locAssetDir / "patch";
+	elz::extractZip(locAssetDir / "patch.zip", patchDir);
+	EXPECT_TRUE(std::filesystem::exists(patchDir / "version.txt"));
+	EXPECT_TRUE(std::filesystem::exists(patchDir / "stuff.txt"));
+	EXPECT_TRUE(std::filesystem::exists(patchDir / "Einkaufsliste.exe"));
+	EXPECT_TRUE(std::filesystem::exists(patchDir / "subfolder" / "moreStuff.txt"));
 }
