@@ -32,7 +32,19 @@ add_custom_command(
 	TARGET UnitTests POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets $<TARGET_FILE_DIR:UnitTests>/assets
 )
+add_custom_command(
+	TARGET UnitTests POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:UnitTests> $<TARGET_FILE_DIR:UnitTests>/assets
+)
+add_custom_command(
+    TARGET UnitTests POST_BUILD
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:UnitTests>/assets
+    COMMAND ${CMAKE_COMMAND} -E tar cf patch.zip --format=zip --
+    $<TARGET_FILE_NAME:UnitTests>
+    test.txt
+)
 
 target_compile_definitions(UnitTests PRIVATE ASSETS_DIR="$<TARGET_FILE_DIR:UnitTests>/assets")
+
 
 add_test(NAME UnitTests COMMAND UnitTests)
