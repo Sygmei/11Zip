@@ -2,7 +2,7 @@
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 Language: Cpp
-ColumnLimit: 100
+ColumnLimit: 200
 DisableFormat: false
 
 BasedOnStyle: Chromium

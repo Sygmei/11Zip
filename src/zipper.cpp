@@ -74,17 +74,7 @@ namespace ziputils
             zip_fileinfo zi = {0};
             getTime(zi.tmz_date);
 
-            int err = zipOpenNewFileInZip(
-                zipFile_,
-                filename,
-                &zi,
-                nullptr,
-                0,
-                nullptr,
-                0,
-                nullptr,
-                Z_DEFLATED,
-                Z_DEFAULT_COMPRESSION);
+            int err = zipOpenNewFileInZip(zipFile_, filename, &zi, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
 
             entryOpen_ = (err == ZIP_OK);
         }

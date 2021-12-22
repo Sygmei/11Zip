@@ -13,14 +13,14 @@ FetchContent_MakeAvailable(googletest)
 add_executable(UnitTests)
 
 target_compile_features(UnitTests
-	PUBLIC
-		cxx_std_17
+    PUBLIC
+        cxx_std_17
 )
 
 target_link_libraries(UnitTests
     PRIVATE
         elzip
-		gtest_main
+        gtest_main
 )
 
 target_sources(UnitTests
@@ -29,12 +29,12 @@ target_sources(UnitTests
 )
 
 add_custom_command(
-	TARGET UnitTests POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets $<TARGET_FILE_DIR:UnitTests>/assets
+    TARGET UnitTests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets $<TARGET_FILE_DIR:UnitTests>/assets
 )
 add_custom_command(
-	TARGET UnitTests POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:UnitTests> $<TARGET_FILE_DIR:UnitTests>/assets
+    TARGET UnitTests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:UnitTests> $<TARGET_FILE_DIR:UnitTests>/assets
 )
 add_custom_command(
     TARGET UnitTests POST_BUILD

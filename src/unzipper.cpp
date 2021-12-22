@@ -119,8 +119,7 @@ namespace ziputils
         {
             unz_file_info64 oFileInfo;
 
-            int err =
-                unzGetCurrentFileInfo64(zipFile_, &oFileInfo, nullptr, 0, nullptr, 0, nullptr, 0);
+            int err = unzGetCurrentFileInfo64(zipFile_, &oFileInfo, nullptr, 0, nullptr, 0, nullptr, 0);
 
             if (err == UNZ_OK)
             {
@@ -145,15 +144,7 @@ namespace ziputils
                 char filename[FILENAME_MAX];
                 unz_file_info64 oFileInfo;
 
-                err = unzGetCurrentFileInfo64(
-                    zipFile_,
-                    &oFileInfo,
-                    filename,
-                    sizeof(filename),
-                    nullptr,
-                    0,
-                    nullptr,
-                    0);
+                err = unzGetCurrentFileInfo64(zipFile_, &oFileInfo, filename, sizeof(filename), nullptr, 0, nullptr, 0);
                 if (err == UNZ_OK)
                 {
                     char nLast = filename[oFileInfo.size_filename - 1];

@@ -25,6 +25,8 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
     - name: Test
+      # NOTE(assertores): zlib calls `add_test()` unconditionally therefore ctest expects zlibs example to be there.
+      # Changing directory into our test folder prevents that.
       working-directory: ${{github.workspace}}/build/test
       run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
@@ -44,6 +46,8 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
     - name: Test
+      # NOTE(assertores): zlib calls `add_test()` unconditionally therefore ctest expects zlibs example to be there.
+      # Changing directory into our test folder prevents that.
       working-directory: ${{github.workspace}}/build/test
       run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
@@ -61,5 +65,7 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
     - name: Test
+      # NOTE(assertores): zlib calls `add_test()` unconditionally therefore ctest expects zlibs example to be there.
+      # Changing directory into our test folder prevents that.
       working-directory: ${{github.workspace}}/build/test
       run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure

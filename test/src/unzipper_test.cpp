@@ -10,11 +10,7 @@ class UnzipFileTestFixture : public ::testing::Test
 protected:
     void SetUp() override
     {
-        std::filesystem::copy(
-            ASSETS_DIR,
-            locAssetDir,
-            std::filesystem::copy_options::overwrite_existing
-                | std::filesystem::copy_options::recursive);
+        std::filesystem::copy(ASSETS_DIR, locAssetDir, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive);
     }
 
     void TearDown() override
@@ -22,18 +18,14 @@ protected:
         if (HasFailure())
         {
             std::cout << "===== ===== assetContent ===== =====\n";
-            for (const auto& it :
-                 std::filesystem::recursive_directory_iterator(std::filesystem::path(locAssetDir)))
+            for (const auto& it : std::filesystem::recursive_directory_iterator(std::filesystem::path(locAssetDir)))
             {
                 std::cout << " > " << it.path().u8string() << '\n';
 #if also_prints_content_of_binary_files
                 if (it.is_regular_file())
                 {
                     auto file = std::ifstream(it.path());
-                    std::cout << std::string(
-                        (std::istreambuf_iterator<char>(file)),
-                        (std::istreambuf_iterator<char>()))
-                              << '\n';
+                    std::cout << std::string((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>())) << '\n';
                     file.close();
                 }
 #endif
@@ -78,10 +70,6 @@ TEST_F(UnzipFileTestFixture, unziped_files_are_equivalent_to_original)  // NOLIN
 {
     const auto patchDir = locAssetDir / "patch";
     elz::extractZip(locAssetDir / "patch.zip", patchDir);
-    EXPECT_TRUE(CompareStreams(
-        std::ifstream(locAssetDir / "test.txt"),
-        std::ifstream(patchDir / "test.txt")));
-    EXPECT_TRUE(CompareStreams(
-        std::ifstream(locAssetDir / EXE_NAME),
-        std::ifstream(patchDir / EXE_NAME)));
+    EXPECT_TRUE(CompareStreams(std::ifstream(locAssetDir / "test.txt"), std::ifstream(patchDir / "test.txt")));
+    EXPECT_TRUE(CompareStreams(std::ifstream(locAssetDir / EXE_NAME), std::ifstream(patchDir / EXE_NAME)));
 }
