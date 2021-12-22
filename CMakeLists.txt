@@ -4,14 +4,12 @@ project(elzip)
 
 option(ELZIP_EXCLUDE_ZLIB "Use this to exclude internal zlib copy." OFF)
 option(ELZIP_EXCLUDE_MINIZIP "Use this to exclude internal minizip copy." OFF)
-option(ELZIP_TESTS "includes tests for 11Zip." ON)
+option(ELZIP_TESTS "includes tests for 11Zip." OFF)
 
 if(NOT ELZIP_EXCLUDE_ZLIB)
     add_subdirectory(extlibs/zlib EXCLUDE_FROM_ALL)
 endif()
 if(NOT ELZIP_EXCLUDE_MINIZIP)
-    set(MZ_ZLIB OFF)
-    set(MZ_ZSTD OFF)
     add_subdirectory(extlibs/minizip EXCLUDE_FROM_ALL)
 endif()
 

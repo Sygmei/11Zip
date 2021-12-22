@@ -24,7 +24,7 @@ jobs:
     - name: Install G++ and build-essential
       run: sudo apt-get install -y build-essential g++
     - name: Compile 11zip
-      run: cd build; cmake ..; make -j8
+      run: cd build; cmake .. -DELZIP_TESTS=ON; make -j8
 
   build_windows:
     name: Build 11zip on Windows
@@ -39,7 +39,7 @@ jobs:
     - name: Run CMake on 11zip
       # NOTE(assertores>: Don't use find_package for 3rd party libraries which are installed incorrectly on GitHub CI instances
       # https://github.com/zlib-ng/minizip-ng/blob/99d39015e29703af2612277180ea586805f655ea/.github/workflows/main.yml#L157
-      run: cd build; cmake .. -G "Visual Studio 16 2019" -A x64 -DMZ_FORCE_FETCH_LIBS=ON
+      run: cd build; cmake .. -G "Visual Studio 16 2019" -A x64 -DMZ_FORCE_FETCH_LIBS=ON -DELZIP_TESTS=ON
       shell: pwsh
     - name: Compile 11zip
       run: cmake --build build --config Release -- /m:8
@@ -55,6 +55,6 @@ jobs:
     - name: Create build directory
       run: mkdir build
     - name: Run CMake on 11zip
-      run: cd build && cmake ..
+      run: cd build && cmake .. -DELZIP_TESTS=ON
     - name: Compile 11zip
       run: cd build && make -j8
