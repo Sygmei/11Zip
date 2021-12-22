@@ -25,6 +25,8 @@ jobs:
       run: sudo apt-get install -y build-essential g++
     - name: Compile 11zip
       run: cd build; cmake .. -DELZIP_TESTS=ON; make -j8
+    - name: Test
+      run: cd build; ctest -C Release --output-on-failure
 
   build_windows:
     name: Build 11zip on Windows
@@ -43,6 +45,8 @@ jobs:
       shell: pwsh
     - name: Compile 11zip
       run: cmake --build build --config Release -- /m:8
+    - name: Test
+      run: cd build; ctest -C Release --output-on-failure
 
   build_macos:
     name: Build 11zip on MacOS
@@ -58,3 +62,5 @@ jobs:
       run: cd build && cmake .. -DELZIP_TESTS=ON
     - name: Compile 11zip
       run: cd build && make -j8
+    - name: Test
+      run: cd build && ctest -C Release --output-on-failure
