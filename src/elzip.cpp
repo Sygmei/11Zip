@@ -33,7 +33,9 @@ namespace elz
         }
         catch (const ziputils::dump_error& e)
         {
-            throw zip_exception("exception occurred when extracting file '" + filename.string() + "' : " + std::string(e.what()));
+            throw zip_exception(
+                "exception occurred when extracting file '" + filename.string()
+                + "' : " + std::string(e.what()));
         }
         wFile.close();
     }
@@ -46,7 +48,8 @@ namespace elz
         for (const std::string& filename : zipFile.getFilenames())
         {
             std::string real_path = _resolvePath(filename);
-            std::filesystem::path currentDir = target / std::filesystem::path(real_path).parent_path();
+            std::filesystem::path currentDir =
+                target / std::filesystem::path(real_path).parent_path();
 
             std::filesystem::create_directories(currentDir);
             std::filesystem::path currentFile = target / real_path;
@@ -55,7 +58,11 @@ namespace elz
         }
     }
 
-    void extractFile(const path& archive, const path& file_in_archive, const path& target, std::string out_filename)
+    void extractFile(
+        const path& archive,
+        const path& file_in_archive,
+        const path& target,
+        std::string out_filename)
     {
         ziputils::unzipper zipFile;
         zipFile.open(archive.string().c_str());
@@ -92,4 +99,4 @@ namespace elz
         }
         zipper.close();
     }
-}
+}  // namespace elz
