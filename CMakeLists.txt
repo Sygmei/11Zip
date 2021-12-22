@@ -60,5 +60,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_EXTENSIONS OFF)
 
 if(ELZIP_TESTS)
+    set(BUILD_TESTING ON)
+    include(CTest)
     add_subdirectory(test)
 endif()

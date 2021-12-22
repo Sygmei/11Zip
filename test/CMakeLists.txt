@@ -46,5 +46,4 @@ add_custom_command(
 
 target_compile_definitions(UnitTests PRIVATE ASSETS_DIR="$<TARGET_FILE_DIR:UnitTests>/assets")
 
-
 add_test(NAME UnitTests COMMAND UnitTests)
