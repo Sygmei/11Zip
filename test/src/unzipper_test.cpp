@@ -59,12 +59,12 @@ TEST_F(UnzipFileTestFixture, files_are_actualy_created_while_unzipping)  // NOLI
     const auto patchDir = locAssetDir / "patch";
     elz::extractZip(locAssetDir / "patch.zip", patchDir);
     EXPECT_TRUE(std::filesystem::exists(patchDir / "test.txt"));
-    EXPECT_TRUE(std::filesystem::exists(patchDir / "UnitTests.exe"));
+    EXPECT_TRUE(std::filesystem::exists(patchDir / EXE_NAME));
 }
 
 bool CompareStreams(std::ifstream&& lhs, std::ifstream&& rhs)
 {
-    while (!lhs.eof() && !rhs.eof())
+    while (lhs.good() && rhs.good())
     {
         if (lhs.get() != rhs.get())
         {
@@ -82,6 +82,6 @@ TEST_F(UnzipFileTestFixture, unziped_files_are_equivalent_to_original)  // NOLIN
         std::ifstream(locAssetDir / "test.txt"),
         std::ifstream(patchDir / "test.txt")));
     EXPECT_TRUE(CompareStreams(
-        std::ifstream(locAssetDir / "UnitTests.exe"),
-        std::ifstream(patchDir / "UnitTests.exe")));
+        std::ifstream(locAssetDir / EXE_NAME),
+        std::ifstream(patchDir / EXE_NAME)));
 }
