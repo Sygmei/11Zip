@@ -6,55 +6,66 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
 jobs:
   build_linux:
     name: Build 11zip on Linux
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
         fetch-depth: 0
-    - name: Create build directory
-      run: mkdir build
-    - name: Aptitude update
-      run: sudo apt-get update
-    - name: Install CMake
-      run: sudo apt-get install -y cmake
-    - name: Install G++ and build-essential
-      run: sudo apt-get install -y build-essential g++
-    - name: Compile 11zip
-      run: cd build; cmake ..; make -j8
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DELZIP_TESTS=ON
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
+    - name: Test
+      # NOTE(assertores): zlib calls `add_test()` unconditionally therefore ctest expects zlibs example to be there.
+      # Changing directory into our test folder prevents that.
+      working-directory: ${{github.workspace}}/build/test
+      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
   build_windows:
     name: Build 11zip on Windows
+    timeout-minutes: 10
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
         fetch-depth: 0
-    - name: Create build directory
-      run: mkdir build
-    - name: Run CMake on 11zip
-      # NOTE(assertores>: Don't use find_package for 3rd party libraries which are installed incorrectly on GitHub CI instances
+    - name: Configure CMake
+      # NOTE(assertores): Don't use find_package for 3rd party libraries which are installed incorrectly on GitHub CI instances
       # https://github.com/zlib-ng/minizip-ng/blob/99d39015e29703af2612277180ea586805f655ea/.github/workflows/main.yml#L157
-      run: cd build; cmake .. -G "Visual Studio 16 2019" -A x64 -DMZ_FORCE_FETCH_LIBS=ON
-      shell: pwsh
-    - name: Compile 11zip
-      run: cmake --build build --config Release -- /m:8
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DMZ_FORCE_FETCH_LIBS=ON -DELZIP_TESTS=ON
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
+    - name: Test
+      # NOTE(assertores): zlib calls `add_test()` unconditionally therefore ctest expects zlibs example to be there.
+      # Changing directory into our test folder prevents that.
+      working-directory: ${{github.workspace}}/build/test
+      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
   build_macos:
     name: Build 11zip on MacOS
+    timeout-minutes: 10
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
         fetch-depth: 0
-    - name: Create build directory
-      run: mkdir build
-    - name: Run CMake on 11zip
-      run: cd build && cmake ..
-    - name: Compile 11zip
-      run: cd build && make -j8
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DELZIP_TESTS=ON
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j 4
+    - name: Test
+      # NOTE(assertores): zlib calls `add_test()` unconditionally therefore ctest expects zlibs example to be there.
+      # Changing directory into our test folder prevents that.
+      working-directory: ${{github.workspace}}/build/test
+      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure

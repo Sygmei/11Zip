@@ -1,14 +1,13 @@
 #if defined _WIN32
 #include <fileapi.h>
 #else
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #endif
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
-
 
 #include <tinydir/tinydir.h>
 
@@ -35,11 +34,13 @@ bool createDir(const std::string& dir)
 #endif
 }
 
-std::vector<std::string> split(const std::string &str, const std::string &delimiters) {
+std::vector<std::string> split(const std::string& str, const std::string& delimiters)
+{
     std::vector<std::string> tokens;
     std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
     std::string::size_type pos = str.find_first_of(delimiters, lastPos);
-    while (std::string::npos != pos || std::string::npos != lastPos) {
+    while (std::string::npos != pos || std::string::npos != lastPos)
+    {
         tokens.push_back(str.substr(lastPos, pos - lastPos));
         lastPos = str.find_first_not_of(delimiters, pos);
         pos = str.find_first_of(delimiters, lastPos);
@@ -47,7 +48,8 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
     return tokens;
 }
 
-std::vector<std::string> listDirInDir(std::string path) {
+std::vector<std::string> listDirInDir(std::string path)
+{
     tinydir_dir dir;
     tinydir_open(&dir, path.c_str());
 
@@ -58,7 +60,10 @@ std::vector<std::string> listDirInDir(std::string path) {
         tinydir_readfile(&dir, &file);
         if (file.is_dir)
         {
-            if (std::string(file.name) != "." && std::string(file.name) != "..") { fileList.push_back(std::string(file.name)); }
+            if (std::string(file.name) != "." && std::string(file.name) != "..")
+            {
+                fileList.push_back(std::string(file.name));
+            }
         }
         tinydir_next(&dir);
     }
@@ -83,7 +88,6 @@ std::string join(std::vector<std::string>& vector, std::string sep, int start, i
     return result;
 }
 
-
 namespace elz
 {
     void extractZip(std::string zipname, std::string target)
@@ -98,10 +102,11 @@ namespace elz
             std::string cFile(target + "/" + filename);
             std::string fillPath;
             std::string buffTest = ".";
-            for (std::string pathPart : split(cDir, "/")) {
-                
+            for (std::string pathPart : split(cDir, "/"))
+            {
                 fillPath += ((fillPath != "") ? "/" : "") + pathPart;
-                if (!isInList(fillPath, listDirInDir(buffTest))) {
+                if (!isInList(fillPath, listDirInDir(buffTest)))
+                {
                     createDir(fillPath.c_str());
                 }
                 buffTest = fillPath;
@@ -126,4 +131,4 @@ namespace elz
         wFile.write(dumped.c_str(), dumped.size());
         wFile.close();
     }
-}
+}  // namespace elz

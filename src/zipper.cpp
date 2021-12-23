@@ -2,8 +2,8 @@
 #include <algorithm>
 #include <ctime>
 
-#include <zlib/zlib.h>
 #include <minizip/mz_compat.h>
+#include <zlib/zlib.h>
 
 #include <zipper.hpp>
 
@@ -11,11 +11,8 @@ namespace ziputils
 {
     constexpr unsigned int BUFSIZE = 2048;
 
-
     // Default constructor
-    zipper::zipper() :
-        zipFile_(nullptr),
-        entryOpen_(false)
+    zipper::zipper() : zipFile_(nullptr), entryOpen_(false)
     {
     }
 
@@ -77,8 +74,7 @@ namespace ziputils
             zip_fileinfo zi = {0};
             getTime(zi.tmz_date);
 
-            int err = zipOpenNewFileInZip(zipFile_, filename, &zi,
-                                          nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+            int err = zipOpenNewFileInZip(zipFile_, filename, &zi, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
 
             entryOpen_ = (err == ZIP_OK);
         }
@@ -144,4 +140,4 @@ namespace ziputils
         tmZip.tm_mon = timeinfo->tm_mon;
         tmZip.tm_year = timeinfo->tm_year;
     }
-};
+};  // namespace ziputils

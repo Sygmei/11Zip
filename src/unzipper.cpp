@@ -12,9 +12,7 @@ namespace ziputils
     }
 
     // Default constructor
-    unzipper::unzipper() :
-        zipFile_(nullptr),
-        entryOpen_(false)
+    unzipper::unzipper() : zipFile_(nullptr), entryOpen_(false)
     {
     }
 
@@ -141,14 +139,12 @@ namespace ziputils
         {
             unz_global_info64 oGlobalInfo;
             int err = unzGetGlobalInfo64(zipFile_, &oGlobalInfo);
-            for (unsigned long i = 0;
-                 i < oGlobalInfo.number_entry && err == UNZ_OK; i++)
+            for (unsigned long i = 0; i < oGlobalInfo.number_entry && err == UNZ_OK; i++)
             {
                 char filename[FILENAME_MAX];
                 unz_file_info64 oFileInfo;
 
-                err = unzGetCurrentFileInfo64(zipFile_, &oFileInfo, filename,
-                                              sizeof(filename), nullptr, 0, nullptr, 0);
+                err = unzGetCurrentFileInfo64(zipFile_, &oFileInfo, filename, sizeof(filename), nullptr, 0, nullptr, 0);
                 if (err == UNZ_OK)
                 {
                     char nLast = filename[oFileInfo.size_filename - 1];
@@ -204,4 +200,4 @@ namespace ziputils
         }
         throw dump_error();
     }
-};
+};  // namespace ziputils
