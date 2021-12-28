@@ -2,13 +2,9 @@ cmake_minimum_required(VERSION 3.12)
 
 project(elzip)
 
-option(ELZIP_EXCLUDE_ZLIB "Use this to exclude internal zlib copy." OFF)
 option(ELZIP_EXCLUDE_MINIZIP "Use this to exclude internal minizip copy." OFF)
 option(ELZIP_TESTS "includes tests for 11Zip." OFF)
 
-if(NOT ELZIP_EXCLUDE_ZLIB)
-    add_subdirectory(extlibs/zlib EXCLUDE_FROM_ALL)
-endif()
 if(NOT ELZIP_EXCLUDE_MINIZIP)
     add_subdirectory(extlibs/minizip EXCLUDE_FROM_ALL)
 endif()
@@ -45,15 +41,6 @@ target_include_directories(elzip
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-# NOTE(assertores): zlib renames the file zconf.h into zconf.h.included
-# because the file is generated in the build folder.
-# see https://github.com/madler/zlib/issues/133
-if(NOT ELZIP_EXCLUDE_ZLIB)
-target_include_directories(elzip
-    PUBLIC
-        ${CMAKE_CURRENT_BINARY_DIR}/extlibs/zlib
-)
-endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
