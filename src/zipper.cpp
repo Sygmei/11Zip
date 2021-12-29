@@ -3,7 +3,6 @@
 #include <ctime>
 
 #include <minizip/mz_compat.h>
-#include <zlib/zlib.h>
 
 #include <zipper.hpp>
 
@@ -74,7 +73,7 @@ namespace ziputils
             zip_fileinfo zi = {0};
             getTime(zi.tmz_date);
 
-            int err = zipOpenNewFileInZip(zipFile_, filename, &zi, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+            int err = zipOpenNewFileInZip(zipFile_, filename, &zi, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, MZ_COMPRESS_LEVEL_DEFAULT);
 
             entryOpen_ = (err == ZIP_OK);
         }
