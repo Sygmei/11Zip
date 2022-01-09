@@ -20,5 +20,5 @@ namespace elz
 
     void extractZip(const path& archive, const path& target = ".");
     void extractFile(const path& archive, const path& fileInArchive, const path& target = ".", std::string outFilename = "");
-    void zipFolder(path folder, path archivePath = "");
+    void zipFolder(const path& folder, path archivePath = "");
 }
