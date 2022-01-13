@@ -191,11 +191,17 @@ namespace ziputils
         {
             unsigned int size = getEntrySize();
             std::vector<char> buf;
-            buf.reserve(size);
-            size = unzReadCurrentFile(zipFile_, buf.data(), size);
             std::string ret;
             if (size > 0)
-                ret = std::string(buf.data(), size);
+            {
+                buf.reserve(size);
+                size = unzReadCurrentFile(zipFile_, buf.data(), size);
+
+                if (size > 0)
+                {
+                    ret = std::string(buf.data(), size);
+                }
+            }
             return ret;
         }
         throw dump_error();

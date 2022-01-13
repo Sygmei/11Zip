@@ -73,3 +73,15 @@ TEST_F(UnzipFileTestFixture, unziped_files_are_equivalent_to_original)  // NOLIN
     EXPECT_TRUE(CompareStreams(std::ifstream(locAssetDir / "test.txt"), std::ifstream(patchDir / "test.txt")));
     EXPECT_TRUE(CompareStreams(std::ifstream(locAssetDir / EXE_NAME), std::ifstream(patchDir / EXE_NAME)));
 }
+
+TEST(unzipping, support_empty_files)  // NOLINT
+{
+    std::filesystem::path basePath = "folder_with_empty_file";
+    std::filesystem::create_directory(basePath);
+    std::ofstream emptyFile(basePath / "empty_file");
+    elz::zipFolder(basePath, "test.zip");
+    std::filesystem::path outputPath = "folder_with_empty_file_out";
+    std::filesystem::create_directory(outputPath);
+    elz::extractZip("test.zip", outputPath);
+    EXPECT_TRUE(CompareStreams(std::ifstream(basePath / "empty_file"), std::ifstream(outputPath / "empty_file")));
+}
