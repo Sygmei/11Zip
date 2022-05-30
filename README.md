@@ -37,18 +37,19 @@ target_link_libraries(YourTargetName elzip)
 ### `elz::extractZip`
 
 ```cpp
-void elz::extractZip(std::string zipname, std::string target = ".");
+void elz::extractZip(std::string zipname, std::string target = ".", std::string password = "");
 ```
 
 Unzips the content of a zip in "target" folder (which is current folder by default).
 
 - **zipname** : Path to the .zip archive to unzip
 - **target** : Path to the directory where you want to unzip the archive, defaults to the current working directory
+- **password** : Archive password (optional)
 
 ### `elz::extractFile`
 
 ```cpp
-void elz::extractFile(std::string zipname, std::string filename, std::string target = ".");
+void elz::extractFile(std::string zipname, std::string filename, std::string target = ".", std::string password = "");
 ```
 
 Extracts a single file from a zip archive
@@ -56,6 +57,7 @@ Extracts a single file from a zip archive
 - **zipname** : Path to the .zip archive to unzip the file from
 - **filename** : Path of the file to extract within the zip archive, note that this name will be used by the unzipped file as well
 - **target** : Path where to extract the file to, defaults to the current working directory
+- **password** : Archive password (optional)
 
 ### `elz::zipFolder`
 
