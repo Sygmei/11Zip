@@ -39,7 +39,7 @@ TEST_F(UnzipFileTestFixture, can_unzip_an_archive_which_contains_binary_files)  
 {
     EXPECT_EXIT(
         {
-            elz::extractZip(locAssetDir / "patch.zip", locAssetDir / "patch");
+            elz::extractZip(locAssetDir / "test_archive.zip", locAssetDir / "patch");
             exit(0);
         },
         ::testing::ExitedWithCode(0),
@@ -49,7 +49,7 @@ TEST_F(UnzipFileTestFixture, can_unzip_an_archive_which_contains_binary_files)  
 TEST_F(UnzipFileTestFixture, files_are_actualy_created_while_unzipping)  // NOLINT
 {
     const auto patchDir = locAssetDir / "patch";
-    elz::extractZip(locAssetDir / "patch.zip", patchDir);
+    elz::extractZip(locAssetDir / "test_archive.zip", patchDir);
     EXPECT_TRUE(std::filesystem::exists(patchDir / "test.txt"));
     EXPECT_TRUE(std::filesystem::exists(patchDir / EXE_NAME));
 }
@@ -69,7 +69,7 @@ bool CompareStreams(std::ifstream&& lhs, std::ifstream&& rhs)
 TEST_F(UnzipFileTestFixture, unziped_files_are_equivalent_to_original)  // NOLINT
 {
     const auto patchDir = locAssetDir / "patch";
-    elz::extractZip(locAssetDir / "patch.zip", patchDir);
+    elz::extractZip(locAssetDir / "test_archive.zip", patchDir);
     EXPECT_TRUE(CompareStreams(std::ifstream(locAssetDir / "test.txt"), std::ifstream(patchDir / "test.txt")));
     EXPECT_TRUE(CompareStreams(std::ifstream(locAssetDir / EXE_NAME), std::ifstream(patchDir / EXE_NAME)));
 }

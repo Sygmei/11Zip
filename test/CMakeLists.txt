@@ -39,7 +39,7 @@ add_custom_command(
 add_custom_command(
     TARGET UnitTests POST_BUILD
     WORKING_DIRECTORY $<TARGET_FILE_DIR:UnitTests>/assets
-    COMMAND ${CMAKE_COMMAND} -E tar cf patch.zip --format=zip --
+    COMMAND ${CMAKE_COMMAND} -E tar cf test_archive.zip --format=zip --
     $<TARGET_FILE_NAME:UnitTests>
     test.txt
 )

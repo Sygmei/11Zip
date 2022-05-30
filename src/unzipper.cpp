@@ -28,10 +28,10 @@ namespace ziputils
     //
     // return:
     //         true if open, false otherwise
-    bool unzipper::open(const char* filename)
+    bool unzipper::open(const std::string_view filename)
     {
         close();
-        zipFile_ = unzOpen64(filename);
+        zipFile_ = unzOpen64(filename.data());
         if (zipFile_)
         {
             readEntries();
@@ -77,15 +77,23 @@ namespace ziputils
     // open an existing zip entry.
     // return:
     //        true if open, false otherwise
-    bool unzipper::openEntry(const char* filename)
+    bool unzipper::openEntry(const std::string_view filename, const std::string_view password)
     {
         if (isOpen())
         {
             closeEntry();
-            int err = unzLocateFile(zipFile_, filename, 0);
+            int err = unzLocateFile(zipFile_, filename.data(), nullptr);
             if (err == UNZ_OK)
             {
-                err = unzOpenCurrentFile(zipFile_);
+                if (!password.empty())
+                {
+                    err = unzOpenCurrentFilePassword(zipFile_, password.data());
+                }
+                else
+                {
+                    err = unzOpenCurrentFile(zipFile_);
+                }
+
                 entryOpen_ = (err == UNZ_OK);
             }
         }
@@ -147,7 +155,7 @@ namespace ziputils
                 err = unzGetCurrentFileInfo64(zipFile_, &oFileInfo, filename, sizeof(filename), nullptr, 0, nullptr, 0);
                 if (err == UNZ_OK)
                 {
-                    char nLast = filename[oFileInfo.size_filename - 1];
+                    const char nLast = filename[oFileInfo.size_filename - 1];
                     if (nLast == '/' || nLast == '\\')
                     {
                         folders_.emplace_back(filename);

@@ -21,9 +21,9 @@ namespace elz
         return std::string(buf.data());
     }
 
-    void _extractFile(ziputils::unzipper& zipFile, const path& filename, const path& target)
+    void _extractFile(ziputils::unzipper& zipFile, const path& filename, const path& target, const std::string& password = "")
     {
-        zipFile.openEntry(filename.string().c_str());
+        zipFile.openEntry(filename.string().c_str(), password);
         std::ofstream wFile;
         wFile.open(target.string(), std::ios_base::binary | std::ios_base::out);
         try
@@ -38,10 +38,14 @@ namespace elz
         wFile.close();
     }
 
-    void extractZip(const path& archive, const path& target)
+    void extractZip(const path& archive, const path& target, const std::string& password)
     {
         ziputils::unzipper zipFile;
-        zipFile.open(archive.string().c_str());
+        bool openResult = zipFile.open(archive.string().c_str());
+        if (!openResult)
+        {
+            throw zip_exception("exception occured when opening archive '" + archive.string() + "'");
+        }
 
         for (const std::string& filename : zipFile.getFilenames())
         {
@@ -51,11 +55,11 @@ namespace elz
             std::filesystem::create_directories(currentDir);
             std::filesystem::path currentFile = target / real_path;
 
-            _extractFile(zipFile, filename, currentFile.string());
+            _extractFile(zipFile, filename, currentFile.string(), password);
         }
     }
 
-    void extractFile(const path& archive, const path& file_in_archive, const path& target, std::string out_filename)
+    void extractFile(const path& archive, const path& file_in_archive, const path& target, std::string out_filename, const std::string& password)
     {
         ziputils::unzipper zipFile;
         zipFile.open(archive.string().c_str());

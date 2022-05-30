@@ -21,11 +21,11 @@ namespace ziputils
         unzipper();
         ~unzipper(void);
 
-        bool open( const char* filename );
+        bool open(std::string_view filename);
         void close();
         bool isOpen();
 
-        bool openEntry( const char* filename );
+        bool openEntry(std::string_view filename, std::string_view password = "");
         void closeEntry();
         bool isOpenEntry() const;
         unsigned int getEntrySize() const;
