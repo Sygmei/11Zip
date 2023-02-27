@@ -1,7 +1,9 @@
 #pragma once
 
-#include <fswrapper.hpp>
 #include <string>
+#include <vector>
+
+#include <fswrapper.hpp>
 
 namespace elz
 {
@@ -21,4 +23,5 @@ namespace elz
     void extractZip(const path& archive, const path& target = ".", const std::string& password = "");
     void extractFile(const path& archive, const path& fileInArchive, const path& target = ".", std::string outFilename = "", const std::string& password = "");
     void zipFolder(const path& folder, path archivePath = "");
+    void zipFiles(const std::vector<path>& files, path archivePath = "archive.zip");
 }  // namespace elz
