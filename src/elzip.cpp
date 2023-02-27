@@ -83,6 +83,11 @@ namespace elz
         zipper.open(archive_path.string().c_str());
         for (const auto& path : std::filesystem::recursive_directory_iterator(directory))
         {
+            if (std::filesystem::is_directory(std::filesystem::status(path)))
+            {
+                continue;
+            }
+            
             const auto& absolute_path = path.path();
             auto relativePath = std::filesystem::relative(absolute_path, directory);
             zipper.addEntry(relativePath.string().c_str());
