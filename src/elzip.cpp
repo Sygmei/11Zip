@@ -96,4 +96,19 @@ namespace elz
         }
         zipper.close();
     }
+
+    void zipFiles(const std::vector<path>& files, path archivePath = "archive.zip")
+    {
+        ziputils::zipper zipper;
+        zipper.open(archivePath.string().c_str());
+        for (const auto& file : files)
+        {
+            zipper.addEntry(file.string().c_str());
+            std::ifstream fileContent;
+            fileContent.open(file.string(), std::ifstream::in | std::ifstream::binary);
+            zipper << fileContent;
+            zipper.closeEntry();
+        }
+        zipper.close();
+    }
 }  // namespace elz
