@@ -97,7 +97,7 @@ namespace elz
         zipper.close();
     }
 
-    void zipFiles(const std::vector<path>& files, path archivePath = "archive.zip")
+    void zipFiles(const std::vector<path>& files, path archivePath)
     {
         ziputils::zipper zipper;
         zipper.open(archivePath.string().c_str());

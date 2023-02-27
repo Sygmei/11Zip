@@ -1,7 +1,9 @@
 #pragma once
 
-#include <fswrapper.hpp>
 #include <string>
+#include <vector>
+
+#include <fswrapper.hpp>
 
 namespace elz
 {
