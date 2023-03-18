@@ -16,7 +16,7 @@ namespace ziputils
     }
 
     // Default destructor
-    zipper::~zipper(void)
+    zipper::~zipper()
     {
         close();
     }
