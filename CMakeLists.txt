@@ -4,19 +4,36 @@ project(elzip)
 
 option(ELZIP_EXCLUDE_MINIZIP "Use this to exclude internal minizip copy." OFF)
 option(ELZIP_TESTS "includes tests for 11Zip." OFF)
+option(ELZIP_DECOMPRESS_ONLY "Only support decompression" OFF)
 
 if(NOT ELZIP_EXCLUDE_MINIZIP)
     set(MZ_BZIP2 OFF)
     set(MZ_ICONV OFF)
     set(MZ_LZMA OFF)
-    set(MZ_PKCRYPT ON)
     set(MZ_SIGNING OFF)
-    set(MZ_WZAES ON)
     set(MZ_ZSTD OFF)
-    # Enabling ZLIB and MZ_COMPAT
     set(MZ_FETCH_LIBS ON)
-    set(MZ_ZLIB ON)
+    # Enabling MZ_COMPAT
     set(MZ_COMPAT ON)
+
+    if (ELZIP_DECOMPRESS_ONLY)
+        set(MZ_LIBCOMP OFF)
+        set(MZ_PKCRYPT OFF)
+        set(MZ_WZAES OFF)
+        set(MZ_OPENSSL OFF)
+        set(MZ_LIBBSD OFF)
+        set(MZ_ZLIB OFF)
+        set(MZ_PKCRYPT OFF)
+        set(MZ_WZAES OFF)
+
+        set(MZ_DECOMPRESS_ONLY ON)
+    else()
+        set(MZ_ZLIB ON)
+        set(MZ_PKCRYPT ON)
+        set(MZ_WZAES ON)
+
+    endif()
+
     add_subdirectory(extlibs/minizip EXCLUDE_FROM_ALL)
 endif()
 
