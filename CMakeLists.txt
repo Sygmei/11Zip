@@ -37,9 +37,16 @@ if(NOT ELZIP_EXCLUDE_MINIZIP)
     add_subdirectory(extlibs/minizip EXCLUDE_FROM_ALL)
 endif()
 
+list(FIND "${CMAKE_CXX_COMPILE_FEATURES}" "cxx_std_17" __hascxx17)
+if ("${__hascxx17}" STREQUAL "-1")
+    set(HAS_FILESYSTEM ON)
+else()
+    set(HAS_FILESYSTEM NO)
+endif()
+
 file(GLOB LZIP_HEADERS include/elzip/*.hpp)
 
-if (USE_FILESYSTEM_FALLBACK)
+if (NOT HAS_FILESYSTEM)
     set(ELZIP_CPP src/elzip_fs_fallback.cpp)
 else()
     set(ELZIP_CPP src/elzip.cpp)
@@ -54,10 +61,20 @@ file(GLOB LZIP_SOURCES
 add_library(elzip ${LZIP_HEADERS} ${LZIP_SOURCES})
 target_link_libraries(elzip minizip)
 
-if (USE_FILESYSTEM_FALLBACK)
+if (NOT HAS_FILESYSTEM)
     target_link_libraries(elzip tinydir)
 elseif (CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(elzip stdc++fs)
+endif()
+
+if (HAS_FILESYSTEM)
+    target_compile_features(elzip PUBLIC
+        cxx_std_17 # Require at least c++17
+    )
+else()
+    target_compile_features(elzip PUBLIC
+        cxx_std_11 # Require at least c++11
+    )
 endif()
 
 target_include_directories(elzip
@@ -69,10 +86,6 @@ target_include_directories(elzip
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_EXTENSIONS OFF)
 
 if(ELZIP_TESTS)
     set(BUILD_TESTING ON)
