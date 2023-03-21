@@ -36,3 +36,6 @@
 .idea/
 build/
 *.user
+
+# Tests
+tests/output/
