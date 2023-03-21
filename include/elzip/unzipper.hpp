@@ -19,7 +19,7 @@ namespace ziputils
     {
     public:
         unzipper();
-        ~unzipper(void);
+        ~unzipper();
 
         bool open(std::string_view filename);
         void close();
@@ -27,14 +27,14 @@ namespace ziputils
 
         bool openEntry(std::string_view filename, std::string_view password = "");
         void closeEntry();
-        bool isOpenEntry() const;
-        unsigned int getEntrySize() const;
+        [[nodiscard]] bool isOpenEntry() const;
+        [[nodiscard]] unsigned int getEntrySize() const;
 
         const std::vector<std::string>& getFilenames();
         const std::vector<std::string>& getFolders();
 
         unzipper& operator>>( std::ostream& os );
-        std::string dump() const;
+        [[nodiscard]] std::string dump() const;
 
     private:
         void readEntries();

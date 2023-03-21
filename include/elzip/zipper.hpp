@@ -12,15 +12,15 @@ namespace ziputils
     {
     public:
         zipper();
-        ~zipper(void);
+        ~zipper();
 
         bool open(const char* filename, bool append = false);
         void close();
-        bool isOpen() const;
+        [[nodiscard]] bool isOpen() const;
 
         bool addEntry(const char* filename);
         void closeEntry();
-        bool isOpenEntry() const;
+        [[nodiscard]] bool isOpenEntry() const;
 
         zipper& operator<<(std::istream& is);
 
