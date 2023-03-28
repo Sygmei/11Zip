@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(elzip)
 
+cmake_policy(SET CMP0077 NEW)
+
 option(ELZIP_EXCLUDE_MINIZIP "Use this to exclude internal minizip copy." OFF)
 option(ELZIP_TESTS "includes tests for 11Zip." OFF)
 option(ELZIP_DECOMPRESS_ONLY "Only support decompression" OFF)
