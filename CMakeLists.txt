@@ -24,13 +24,11 @@ if(NOT ELZIP_EXCLUDE_MINIZIP)
         set(MZ_WZAES OFF)
         set(MZ_OPENSSL OFF)
         set(MZ_LIBBSD OFF)
-        set(MZ_ZLIB OFF)
         set(MZ_PKCRYPT OFF)
         set(MZ_WZAES OFF)
 
         set(MZ_DECOMPRESS_ONLY ON)
     else()
-        set(MZ_ZLIB ON)
         set(MZ_PKCRYPT ON)
         set(MZ_WZAES ON)
 
