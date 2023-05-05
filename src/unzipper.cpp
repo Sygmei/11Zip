@@ -178,7 +178,7 @@ namespace ziputils
         {
             unsigned int size = getEntrySize();
             std::vector<char> buf;
-            buf.reserve(size);
+            buf.resize(size);
             size = unzReadCurrentFile(zipFile_, buf.data(), size);
             if (size > 0)
             {
@@ -202,7 +202,7 @@ namespace ziputils
             std::string ret;
             if (size > 0)
             {
-                buf.reserve(size);
+                buf.resize(size);
                 size = unzReadCurrentFile(zipFile_, buf.data(), size);
 
                 if (size > 0)
