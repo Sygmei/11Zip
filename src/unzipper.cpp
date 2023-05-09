@@ -179,11 +179,15 @@ namespace ziputils
             unsigned int size = getEntrySize();
             std::vector<char> buf;
             buf.resize(size);
-            size = unzReadCurrentFile(zipFile_, buf.data(), size);
-            if (size > 0)
+            int length = unzReadCurrentFile(zipFile_, buf.data(), size);
+            if (length >= 0)
             {
-                os.write(buf.data(), size);
+                os.write(buf.data(), length);
                 os.flush();
+            }
+            else
+            {
+                throw dump_error();
             }
         }
         else
@@ -203,11 +207,15 @@ namespace ziputils
             if (size > 0)
             {
                 buf.resize(size);
-                size = unzReadCurrentFile(zipFile_, buf.data(), size);
+                int length = unzReadCurrentFile(zipFile_, buf.data(), size);
 
-                if (size > 0)
+                if (length >= 0)
                 {
-                    ret = std::string(buf.data(), size);
+                    ret = std::string(buf.data(), length);
+                }
+                else
+                {
+                    throw dump_error();
                 }
             }
             return ret;
