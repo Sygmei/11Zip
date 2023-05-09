@@ -202,16 +202,15 @@ namespace ziputils
         if (isOpenEntry())
         {
             unsigned int size = getEntrySize();
-            std::vector<char> buf;
             std::string ret;
             if (size > 0)
             {
-                buf.resize(size);
-                int length = unzReadCurrentFile(zipFile_, buf.data(), size);
+                ret.resize(size);
+                int length = unzReadCurrentFile(zipFile_, ret.data(), size);
 
                 if (length >= 0)
                 {
-                    ret = std::string(buf.data(), length);
+                    ret.resize(length);
                 }
                 else
                 {
